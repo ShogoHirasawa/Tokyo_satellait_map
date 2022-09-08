@@ -45,7 +45,9 @@
         map.on("load", function () {
           map.addSource("satellite-image", {
             type: "raster",
-            data: "https://shogohirasawa.github.io/Tiling-satellite-images_demo/zxy/{z}/{x}/{y}.png",
+            tiles: [
+              "https://shogohirasawa.github.io/Tiling-satellite-images_demo/zxy/{z}/{x}/{y}.png",
+            ],
             tileSize: 256,
           });
           map.addLayer({
