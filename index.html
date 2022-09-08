@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>関東ベースマップ</title>
+    <script src="https://unpkg.com/maplibre-gl@2.1.9/dist/maplibre-gl.js"></script>
+    <link
+      href="https://unpkg.com/maplibre-gl@2.1.9/dist/maplibre-gl.css"
+      rel="stylesheet"
+    />
+    <style>
+      html,
+      body,
+      #map {
+        width: 100vw;
+        height: 100vh;
+        padding: 0;
+        margin: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="map"></div>
+    <script>
+      (async () => {
+        let map;
+        const res = await fetch("./tiles.json");
+        const tilejson = await res.json();
+        const bounds = tilejson.bounds;
+        const center = tilejson.center
+          ? tilejson.center
+          : [(bounds[0] + bounds[2]) / 2, (bounds[1] + bounds[3]) / 2];
+        const zoom = (tilejson.minzoom + tilejson.maxzoom) / 2;
+        console.log(center, zoom);
+        map = new maplibregl.Map({
+          container: "map",
+          style: "./style.json",
+          center: center,
+          zoom: 10,
+        });
+        map.addSource("satellite-image", {
+          type: "raster",
+          data: "https://shogohirasawa.github.io/Tokyo_satellit_map/satellite_image/zxy/{z}/{x}/{y}.png",
+          tileSize: 256,
+          attribution: "Landsat-8 image courtesy of the U.S. Geological Survey",
+        });
+        map.addLayer({
+          id: "satellite-image",
+          type: "raster",
+          source: "satellite-image",
+          minzoom: 0,
+          maxzoom: 22,
+        });
+
+        map.addControl(new maplibregl.NavigationControl());
+        map.addControl(
+          new maplibregl.AttributionControl({
+            compact: false,
+            customAttribution:
+              "Style © <a href='http://openmaptiles.org/'>OpenMapTiles</a> | " +
+              "Data © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap contributors</a> ",
+          })
+        );
+      })();
+    </script>
+  </body>
+</html>
