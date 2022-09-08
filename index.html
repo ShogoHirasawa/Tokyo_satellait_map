@@ -41,18 +41,22 @@
           center: center,
           zoom: 10,
         });
-        map.addSource("satellite-image", {
-          type: "raster",
-          data: "https://shogohirasawa.github.io/Tokyo_satellit_map/satellite_image/zxy/{z}/{x}/{y}.png",
-          tileSize: 256,
-          attribution: "Landsat-8 image courtesy of the U.S. Geological Survey",
-        });
-        map.addLayer({
-          id: "satellite-image",
-          type: "raster",
-          source: "satellite-image",
-          minzoom: 0,
-          maxzoom: 22,
+
+        map.on("load", function () {
+          map.addSource("satellite-image", {
+            type: "raster",
+            data: "https://shogohirasawa.github.io/Tokyo_satellit_map/satellite_image/zxy/{z}/{x}/{y}.png",
+            tileSize: 256,
+            attribution:
+              "Landsat-8 image courtesy of the U.S. Geological Survey",
+          });
+          map.addLayer({
+            id: "satellite-image",
+            type: "raster",
+            source: "satellite-image",
+            minzoom: 0,
+            maxzoom: 22,
+          });
         });
 
         map.addControl(new maplibregl.NavigationControl());
